@@ -20,7 +20,6 @@ const app = express();
     
       controllers: [ProductController,],
     });
-    console.log('sdagdh', 5000)
     expressApp.listen(5000, () => {
         console.log(`Example app listening on port ${5000}`)
       })
