@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import { useContainer as classValidatorUseContainer} from "class-validator";
 import { useContainer as routingUseContainer, useExpressServer } from "routing-controllers";
 import { Container } from 'typedi';
-import { ProductController } from './api/controllers/ProductController';
+import { TestController } from './api/controllers/TestController';
 import "reflect-metadata"
 
 routingUseContainer(Container)
@@ -18,7 +18,7 @@ const app = express();
       routePrefix: '/api',
     //   defaultErrorHandler: false,
     
-      controllers: [ProductController,],
+      controllers: [TestController,],
     });
     expressApp.listen(5000, () => {
         console.log(`Example app listening on port ${5000}`)
