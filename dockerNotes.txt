@@ -69,6 +69,19 @@ alpine linux distribution:
 docker registery:
     it an server side application that store and distribute docker image.
 
+    push an image to repository:
+        docker tag api:latest antonymarshal23/api:latest - tag the image
+        docker login - to login
+        docker push antonymarshal23/api:latest - to push the image username/repository:tag
+    pull an image form an repository:
+        docker pull antonymarshal23/api - to pull the image from  username/repository:tag
+    inspect docker container:
+        docker inpect 86f3a2890576 - give a replace it 86f3a2890576 with docker id
+    more command in container:
+        docker logs 86f3a2890576 - give a replace it 86f3a2890576 with docker id
+        docker logs -f api - -f means follow which means it will not cut
+        docker exec -it 86f3a2890576 /bin/sh - it will take us to the CWD(current working dir)
+
 docker --help:
 
     -a, --all             Show all containers (default shows just running)

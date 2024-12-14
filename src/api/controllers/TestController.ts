@@ -25,6 +25,10 @@ export class TestController {
           name: "marshal",
           age: "13",
         },
+        {
+          name: "sathish",
+          age: "12",
+        },
       ],
     });
   }
