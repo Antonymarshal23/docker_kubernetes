@@ -36,6 +36,24 @@ export class ProductController {
     })
   }
 
+  @Get('/test')
+  public async test(@Req() request: any, @Res() response: any) {
+    return response.status(200).send({
+        status: 1,
+        message: "product list...",
+        data: [
+          {
+            "name": "antony",
+            "age": "17"
+          },
+          {
+            "name": "marshal",
+            "age": "13"
+          },
+        ]
+    })
+  }
+
   @Put('/:id')
   public async updateProduct(@Param('id') id, @Body() payload, @Req() request: any, @Res() response: any) {
     const data = await this.productService.findOne(id)
