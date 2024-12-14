@@ -1,0 +1,93 @@
+docker is a tool for running application in an isolated environment.
+similar to virtual machine.
+
+two main steps are:
+    create an image and run it by containers.
+
+download nginx image
+    https://hub.docker.com/ -> link to download images
+
+    docker pull nginx -> download nginx
+
+commands: 
+    docker ps - provides a list of the Docker containers on your machine
+    docker images - to see the list of images
+    docker run nginx:latest - to run a container to run instance of an image
+    docker run -d nginx:latest - to run a container to run instance of an image in an detached mood
+    docker container ls - provide a list of containers
+    docker stop 47167193ebe1 - stop container 
+    docker run -d -p 8080:80 -p 3000:80 nginx:latest - to run app using two more port 
+    docker start funny_brown - to start a container
+    docker ps -a - to show all containers
+    docker rm c572a9324052 - to delete a container
+    for /f %i in ('docker ps -aq') do docker rm %i - delete all container by geting the id using loop
+    docker rm $(docker ps -a -q) - delete all container by id 
+    docker rm -f 4e5cf888d3b9 - to remove the container even if it running 
+    docker run --name website -d -p 8080:80 -p 3000:80 nginx:latest - name a containe.
+    docker ps --format="ID\t{{.ID}}\nIMAGE\t{{.Image}}\nCOMMAND\t{{.Command}}\nCREATED AT\t{{.CreatedAt}}\nSTATUS\t{{.Status}}\nPORTS\t{{.Ports}}\nNAMES\t{{.Names}}\n" - to format containers
+    docker run --name website -v C:\node\docker\website:/usr/share/nginx/html:ro -d -p 3000:80 nginx:latest - to volume file from local to docker
+    docker exec -it website bash - to run an interactive mood(Docker provides a way to execute commands inside the container.)
+    ls -al - show all things in the cur dir 
+    exit - exit from the container
+    docker run --name website -v C:\node\docker\website:/usr/share/nginx/html:ro -d -p 3000:80 nginx:latest - remove ro to ignore read only mood
+    docker run --name website-copy --volumes-from website -d -p 8081:80 nginx - copy from one container to another
+    
+for image:
+    docker image ls - to see the list of images
+    docker build --tag website:latest . - create an image 
+    docker run --name website -p 8080:80 -d website:latest - run an website image in a container
+
+        step to add everthing for api (file name Dockerfile)
+            FROM node:latest
+            # if app is exist make it as work dir or create one for the app
+            WORKDIR /app
+            # add everything from this CWD to app in docker
+            ADD package*.json .
+            # Install the dependencies listed in package.json
+            RUN npm i
+            ADD . .
+            # Start the application using `npm start`
+            CMD ["npm", "start"] 
+        
+        step to ignore something for api (file name .dockerignore)
+            node_modules
+            Dockerfile
+            .git
+    
+Exposing port:
+    docker run -d -p 8080:80 nginx:latest - port 8080 map to 80
+
+tag images:
+    docker tag api:latest api:1.0.0 - tag api:latest to api:1.0.0  (from my point it like a branch in github)
+
+alpine linux distribution:
+    A minimal Docker image based on Alpine Linux with a complete package index and only 5 MB in size!
+    it reduce the size of image
+        docker pull node:lts-alpine - to pull a alpine
+        docker pull nginx:alpine
+
+docker registery:
+    it an server side application that store and distribute docker image.
+
+docker --help:
+
+    -a, --all             Show all containers (default shows just running)
+    -f, --filter filter   Filter output based on conditions provided
+        --format string   Format output using a custom template:
+                          'table':            Print output in table format
+                          with column headers (default)
+                          'table TEMPLATE':   Print output in table format
+                          using the given Go template
+                          'json':             Print in JSON format
+                          'TEMPLATE':         Print output using the given
+                          Go template.
+                          Refer to https://docs.docker.com/go/formatting/
+                          for more information about formatting output with
+                          templates
+    -n, --last int        Show n last created containers (includes all
+                          states) (default -1)
+    -l, --latest          Show the latest created container (includes all
+                          states)
+        --no-trunc        Don't truncate output
+    -q, --quiet           Only display container IDs
+    -s, --size            Display total file sizes
