@@ -1,0 +1,231 @@
+Kubernetes is an open-source platform that automates the deployment, scaling, and management of containerized applications.
+
+architectrue of kubernetes:
+    have cluster of MASTER and WORK NODE worker node gonna take all the container were all the application is running.
+
+    in master node api SERVER is the entry point for kubernetes. this is the process were diffrent client will take to like UI, CLI, API 
+
+    in master 2nd CONTROLLER MANAGER it track what happning in cluter and idf the container is dead need to restart.
+
+    anothere is SCEDULAR is resposible for scheduling in which worker node the container should schedule. 
+
+    ETCD is a key value storage 
+
+    finally the master will be more than one if one got failed another one come into play.
+
+kubernetes components are:
+    POD: 
+        smallest unit of k8's
+        abstraction over container 
+        usally one application per pod 
+        each pod get its own ip
+        if a pod got died a new pod will replace and new ip address on re creations
+
+    SERVICE:
+        service give permenent ip address
+        lifecycle of pod and service NOT connected
+        type of service internal for db kind of thing and external for our app.
+
+    INGRESS:
+        Ingress is a Kubernetes resource that manages external access to services within a cluster.
+        It acts as a single entry point for incoming traffic, routing it to the appropriate services
+        based on the routing rules the developer sets. Kubernetes Ingress provides a way to securely
+        and efficiently expose services.
+
+    CONFIGMAP: 
+        configMap component used to set external config like db and so on. but do not use it to set credentials.
+
+    SECREAT:
+        if you want to set credential we can go with secret component
+
+    VOLUME:
+        in the pod store db when it got restarted the data will be gone. 
+        it persist the data we use another component call volume.
+        k8 doen't manage data persistance.
+
+    DEPLOYMENT:
+        A deployment is a resource object in Kubernetes that describes how to create or modify instances of pods
+        that contain a containerized application.
+            Purpose
+                A deployment allows you to describe an application's life cycle, 
+                including the number of pods, the images to use, and how to update them. 
+            How it works
+                You describe a desired state in a deployment,
+                and the Deployment Controller changes the actual state to match the desired state. 
+
+    STATEFULLSET:
+        A StatefulSet in Kubernetes is a set of Pods that are managed with unique, persistent identities:
+        Persistent identities
+            Each Pod is assigned a unique identifier, such as a persistent hostname or volume, 
+            that persists even if the Pod is recreated.
+        Stable hostnames
+            GKE maintains stable hostnames for StatefulSet Pods regardless of where they are scheduled.
+        Persistent volumes
+            State information and other resilient data for each Pod is maintained in persistent volumes. 
+
+        StatefulSets are useful for managing applications that require:
+            Persistent storage
+            A stable, unique network identity
+            Ordered deployment and scaling 
+
+        Examples of stateful applications include:
+            Databases
+            Data stores
+            Distributed systems
+            Consensus-based applications such as etcd and ZooKeeper
+            MySQL clusters
+            Redis
+            Kafka
+            MongoDB 
+            StatefulSets are different from Deployments, which are more suited to work with stateless applications. 
+            In a Deployment, Pods are interchangeable, but in a StatefulSet, each Pod has a unique identity
+
+MINICUBE: 
+    Minikube is a Kubernetes distribution that allows users to set up a Kubernetes environment on their local computer.
+    It's a lightweight, single-node cluster that's designed for local development and testing: 
+    Purpose
+        Minikube lets users experiment with Kubernetes features without the complexity
+        of setting up and maintaining a full-fledged cluster. It's especially useful for
+        beginners who want to gain familiarity with basic concepts. 
+    Features
+        Minikube creates a single node cluster contained in a virtual machine (VM). 
+        It supports all major operating systems, including Windows, Linux, and macOS. 
+    Benefits
+        Minikube allows users to: 
+        Demo Kubernetes operations 
+        Try out Kubernetes deployments 
+        Perform development tasks 
+        Test configurations 
+        Enhance their Kubernetes skills 
+
+KUBECTL:
+    Kubectl is a command line tool that allows users to interact with Kubernetes clusters: 
+    
+    Communicate with the Kubernetes API:
+        Kubectl sends HTTP requests to the Kubernetes API server to facilitate communication between users, Kubernetes resources, and external components. 
+    Perform CRUD operations:
+        Kubectl can be used to create, read, update, and delete Kubernetes resources. 
+    Deploy and scale applications:
+        Kubectl can be used to deploy and scale applications based on demand. 
+    Manage resources:
+        Kubectl can be used to manage Kubernetes resources such as pods, deployments, and services. 
+    Optimize and make decisions:
+        Kubectl can provide insights into application performance to help engineers make informed decisions. 
+        Kubectl is compatible with major operating systems, including Linux, Windows, and Mac OS. 
+
+----------------------------------------------------------------------------------
+installation:
+    install hypervizer like hyper V or virtualBox.
+
+    we have to download .exe package for minikube kubectl
+
+    https://minikube.sigs.k8s.io/docs/drivers/virtualbox/  -> from this link
+        Start a cluster using the virtualbox driver:
+            minikube start --driver=virtualbox - tell minikube which hypervizer shoud use
+        To make virtualbox the default driver: 
+            minikube config set driver virtualbox - 
+        
+    if the above setup is not work we can use docker 
+         minikube start --driver=docker
+----------------------------------------------------------------------------------
+
+status of the node 
+    kubectl get nodes - minikube node 
+    minikube status - to check a status of a minikube 
+    kubectl version - check a version
+    kubectl get pod - get a pod
+    kubectl get services - to get services
+    kubectl get replicaset - to get a replicaset
+    kubectl get all - get all cluster
+    kubectl get pod -o wide - to get addition ip address like ip address and so on
+
+we are going to intract with minikube cluster uing cubectl
+minikube cluster used for start up and deleting cluster other thing in cubectl
+
+deployment:
+    kubectl create deployment nginx-depl --image=nginx - deploy nginx in kubectl
+    kubectl create deployment mongo-depl --image=mongo - deploy mongo in kubectl
+    kubectl get deployment - check if it got deployed
+
+debugging pod:
+    kubectl logs nginx-depl-5796b5c499-5v7z2 -  kubectl logs podName - to log the pod 
+    kubectl describe pod mongo-depl-67d7db846c-rfl25 - descripe all about the pod
+    kubectl exec -it mongo-depl-67d7db846c-rfl25 -- bin/bash
+delete deployment:
+    kubectl delete deployment nginx-depl
+kubectl apply -f:
+    if we need to lot config in deployment while create a deployment 
+    we do not want to add it like this kubectl deployment name image option1 option and so on
+    we can create a config file and tell kubectl to excecute the file like below
+
+    command:
+        kubectl apply -f nginx-deployment.yaml -  kubectl apply -f config-file.yaml - command for run the config file
+
+-----------------------------------------------------------------------------------------------
+CREATE A DEPLOYMENT:
+    MONGO DB POD:
+        create config for mongo.yaml
+        create a secret.yaml with encrypt username password 
+            to encrpt username and password using powershell 
+                [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes('antonymarshal23'))
+                [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes('marshal12345'))
+
+        after create a mongo and mongo-secret have to run the mongo-secret
+            kubectl apply -f mongo-secret.yaml -  the secret file is mongo-secret.yaml(filename)
+
+        then we have to reference it into the mongo.yaml file like below
+            env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+                secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+                secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-password
+
+            kubectl apply -f mongo.yaml - run the mongo.yaml file (mongodb deployment)
+    
+    MONGO DB INTERNAL SERVICE:
+        create a service config into the mongo.yaml file user the mongo config by using --- 
+         kubectl apply -f mongo.yaml - to craete a service run this command
+
+    MONGODB EXPRESS DEPLOYMENT & SERVICE & CONFIG CONFIGMAP
+        first create a mongo-express.yaml config 
+        and also create a mongo-configmap.yamp  for common env setup like database_url andso on.
+        add  mongo-configmap.yamp env into mongodb-express.yaml
+            valueFrom:
+                configMapKeyRef:
+                name: mongodb-configmap
+                key: database_url      
+
+        and run the config first mongo-configmap.yamp and mongodb-express.yaml
+            kubectl apply -f mongo-configmap.yaml
+            kubectl apply -f mongo-express.yaml
+
+    MONGODB EXPRESS EXTERNAL SERVICE (to access mongo express from the browser)
+        create a config into mongo-express.yaml for external service 
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+            name: mongo-express-service
+            spec:
+            selector:
+                app: mongo-express
+            type: LoadBalancer
+            ports:
+                - protocol: TCP
+                port: 8081
+                targetPort: 8081
+                nodePort: 30000
+        and run it the mongo-express.yaml
+            kubectl apply -f mongo-express.yaml
+
+        note: in the service clusterIp give you the internal ip
+              and loadbalacer give the internal ip also it's give external ip
+              where the external request coming from 
+
+    FINNALY: to start the external service -> minikube service mongo-express-service - minikube service servicename 
